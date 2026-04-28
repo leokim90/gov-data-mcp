@@ -26,9 +26,19 @@ Claude Desktop / Claude Code 등 MCP 호환 클라이언트에서 자연어로 �
 발급 후 각 사이트 마이페이지에서 활용 승인을 확인한다.
 data.go.kr은 키 발급 후 활용 승인까지 1~2시간 걸릴 수 있다.
 
-### 2. Claude Desktop / Claude Code에 등록
+### 2-A. Claude Desktop에 등록
 
-`claude_desktop_config.json` (Claude Desktop) 또는 `.mcp.json` (Claude Code)에 다음 추가:
+설정 파일을 연다.
+
+| OS | 경로 |
+|----|------|
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+
+> 파일이 없으면 새로 만든다.
+> Claude Desktop 메뉴 → Settings → Developer → **Edit Config** 버튼으로도 자동 열림.
+
+아래 내용을 붙여넣고 키 3곳만 본인 발급키로 교체:
 
 ```json
 {
@@ -46,7 +56,36 @@ data.go.kr은 키 발급 후 활용 승인까지 1~2시간 걸릴 수 있다.
 }
 ```
 
-키가 없는 도구는 자동으로 빈 배열을 반환하므로, 필요한 키만 설정해도 동작한다.
+저장 후 **Claude Desktop 완전 종료(Cmd+Q) → 재시작.**
+
+### 2-B. Claude Code에 등록
+
+터미널에서 한 줄:
+
+```bash
+claude mcp add gov-data \
+  --env DATA_GO_KR_SERVICE_KEY=발급받은키 \
+  --env BIZINFO_API_KEY=발급받은키 \
+  --env SMES_API_KEY=발급받은키 \
+  -- npx -y @leokim90/gov-data-mcp
+```
+
+확인:
+
+```bash
+claude mcp list
+```
+
+→ 출력에 `gov-data` 있으면 정상.
+
+특정 프로젝트에서만 쓰고 싶으면 프로젝트 루트에 `.mcp.json` 파일로도 가능 (구조는 위 Claude Desktop JSON과 동일). 단, 키가 평문으로 들어가므로 **`.gitignore`에 `.mcp.json` 추가 필수.**
+
+### 2-C. 동작 확인
+
+- **Claude Desktop**: 채팅창 좌하단 🔨(망치) 아이콘 클릭 → `gov-data` 항목에 도구 5개(`fetch_mss_biz`, `fetch_gov24_services`, `fetch_bizinfo_programs`, `fetch_nara_bids`, `fetch_smes_notices`) 표시되면 정상.
+- **Claude Code**: 새 세션 열고 `/mcp` 입력 → `gov-data ✓ connected` 떠야 정상.
+
+> 키가 없는 도구는 자동으로 빈 배열을 반환하므로, 필요한 키만 설정해도 나머지 도구는 정상 동작한다.
 
 ## 사용 예시
 
