@@ -1,0 +1,48 @@
+{
+  "name": "@leokim90/gov-data-mcp",
+  "version": "0.1.0",
+  "description": "Korean government open-data MCP server (중기부·정부24·기업마당·나라장터·중소벤처24)",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "gov-data-mcp": "src/mcp-server.js"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE",
+    ".env.example"
+  ],
+  "scripts": {
+    "start": "node src/mcp-server.js",
+    "test": "node tests/smoke.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "korea",
+    "government",
+    "open-data",
+    "data.go.kr",
+    "bizinfo",
+    "smes",
+    "nara",
+    "gov24"
+  ],
+  "author": "leokim90",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leokim90/gov-data-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/leokim90/gov-data-mcp/issues"
+  },
+  "homepage": "https://github.com/leokim90/gov-data-mcp#readme",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  }
+}
