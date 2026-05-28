@@ -3,28 +3,68 @@
 한국 정부 공공데이터 5종을 한 번에 호출하는 MCP(Model Context Protocol) 서버.
 Claude Desktop / Claude Code 등 MCP 호환 클라이언트에서 자연어로 정부 사업·공고·서비스 데이터를 가져올 수 있다.
 
-## 제공 도구 (5종)
+## 제공 도구 (6종)
 
 | 도구명 | 설명 | 출처 |
 |--------|------|------|
 | `fetch_mss_biz` | 중소벤처기업부 사업공고 목록 | `apis.data.go.kr/1421000/mssBizService_v2` |
 | `fetch_gov24_services` | 정부24 공공서비스(혜택) 키워드 검색 | `api.odcloud.kr/api/gov24/v3` |
+| `fetch_gov24_service_detail` | 정부24 서비스 상세 (신청자격·구비서류 등) | `api.odcloud.kr/api/gov24/v3` |
 | `fetch_bizinfo_programs` | 기업마당 지원사업 (NIPA·KISA·중진공·TIPA 등 통합) | `bizinfo.go.kr` |
-| `fetch_nara_bids` | 나라장터 입찰공고 (용역/공사/물품/외자) | `apis.data.go.kr/1230000` |
+| `fetch_nara_bids` | 나라장터 입찰공고 (용역/공사/물품/외자, 키워드 검색 가능) | `apis.data.go.kr/1230000` |
 | `fetch_smes_notices` | 중소벤처24 산하기관 공고 | `smes.go.kr/fnct/apiReqst/extPblancInfo` |
 
 ## 설치
 
-### 1. API 키 발급 (각 5~10분, 본인 명의)
+### 1. API 키 발급
 
-| 키 환경변수 | 발급 사이트 | 용도 |
-|------------|------------|------|
-| `DATA_GO_KR_SERVICE_KEY` | https://www.data.go.kr | 중기부 + 정부24 + 나라장터 (1개로 3개 API 공통) |
-| `BIZINFO_API_KEY` | https://www.bizinfo.go.kr | 기업마당 |
-| `SMES_API_KEY` | https://www.smes.go.kr | 중소벤처24 |
+3개 사이트에서 각각 무료로 발급받는다. 회원가입 포함 사이트당 약 5~10분.
 
-발급 후 각 사이트 마이페이지에서 활용 승인을 확인한다.
-data.go.kr은 키 발급 후 활용 승인까지 1~2시간 걸릴 수 있다.
+---
+
+#### 🔑 키 1 — `DATA_GO_KR_SERVICE_KEY` (중기부·정부24·나라장터 공통)
+
+**발급처:** https://www.data.go.kr
+
+1. 우측 상단 **회원가입** → 본인인증 후 가입
+2. 로그인 후 우측 상단 **마이페이지** 클릭
+3. 좌측 메뉴 **인증키 발급현황** 클릭
+4. 상단 **일반 인증키(Encoding)** 항목의 키 값 복사
+   - 키가 없으면 **인증키 신청** 버튼 → 자동 발급 (즉시)
+5. 복사한 값을 `DATA_GO_KR_SERVICE_KEY`에 붙여넣기
+
+> **주의:** 키는 URL 인코딩된 형태(`%2F`, `%2B` 등 포함)로 복사된다. 그대로 사용하면 된다.
+> 첫 발급 후 실제 API 호출이 될 때까지 최대 1~2시간 걸릴 수 있다.
+
+---
+
+#### 🔑 키 2 — `BIZINFO_API_KEY` (기업마당)
+
+**발급처:** https://www.bizinfo.go.kr
+
+1. 우측 상단 **회원가입** → 일반회원으로 가입
+2. 로그인 후 우측 상단 **마이페이지** 클릭
+3. 좌측 메뉴 **오픈API 신청/관리** 클릭
+4. **오픈API 신청** 버튼 → 활용 목적 입력 후 신청
+5. 승인 완료 후 같은 페이지에서 **인증키** 복사
+   - 승인은 보통 즉시~수 분 내 자동 승인
+
+---
+
+#### 🔑 키 3 — `SMES_API_KEY` (중소벤처24)
+
+**발급처:** https://www.smes.go.kr
+
+1. 우측 상단 **회원가입** → 본인인증 후 가입
+2. 로그인 후 우측 상단 **마이페이지** 클릭
+3. 좌측 메뉴 **Open API 관리** 클릭
+4. **API 토큰 신청** 버튼 클릭 → 즉시 발급
+5. 발급된 **토큰 값** 복사 → `SMES_API_KEY`에 붙여넣기
+
+---
+
+> **3개 키가 모두 없어도 된다.** 키가 없는 API는 빈 배열을 반환하며, 나머지 API는 정상 동작한다.
+> 예: `DATA_GO_KR_SERVICE_KEY`만 있어도 중기부·정부24·나라장터 3개 도구를 사용할 수 있다.
 
 ### 2-A. Claude Desktop에 등록
 
@@ -82,7 +122,7 @@ claude mcp list
 
 ### 2-C. 동작 확인
 
-- **Claude Desktop**: 채팅창 좌하단 🔨(망치) 아이콘 클릭 → `gov-data` 항목에 도구 5개(`fetch_mss_biz`, `fetch_gov24_services`, `fetch_bizinfo_programs`, `fetch_nara_bids`, `fetch_smes_notices`) 표시되면 정상.
+- **Claude Desktop**: 채팅창 좌하단 🔨(망치) 아이콘 클릭 → `gov-data` 항목에 도구 6개(`fetch_mss_biz`, `fetch_gov24_services`, `fetch_gov24_service_detail`, `fetch_bizinfo_programs`, `fetch_nara_bids`, `fetch_smes_notices`) 표시되면 정상.
 - **Claude Code**: 새 세션 열고 `/mcp` 입력 → `gov-data ✓ connected` 떠야 정상.
 
 > 키가 없는 도구는 자동으로 빈 배열을 반환하므로, 필요한 키만 설정해도 나머지 도구는 정상 동작한다.
@@ -123,10 +163,14 @@ const programs = await fetchBizinfoPrograms({ searchCnt: 20 });
 ### `fetch_bizinfo_programs`
 - `searchCnt` (number, 기본 20): 조회 건수
 
+### `fetch_gov24_service_detail`
+- `serviceId` (string, **필수**): `fetch_gov24_services` 결과의 `serviceId` 값
+
 ### `fetch_nara_bids`
 - `numOfRows` (number, 기본 20)
 - `pageNo` (number, 기본 1)
 - `type` (string, 기본 "Servc"): "Servc"(용역) | "Cnstwk"(공사) | "Thng"(물품) | "Frgcpt"(외자)
+- `keyword` (string, 선택): 공고명 키워드 검색
 - `inqryBgnDt` / `inqryEndDt` (string, YYYYMMDDHHMM): 조회 기간
 
 ### `fetch_smes_notices`

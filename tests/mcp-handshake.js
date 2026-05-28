@@ -78,6 +78,7 @@ if (Array.isArray(list?.result?.tools)) {
   const expected = [
     'fetch_mss_biz',
     'fetch_gov24_services',
+    'fetch_gov24_service_detail',
     'fetch_bizinfo_programs',
     'fetch_nara_bids',
     'fetch_smes_notices',

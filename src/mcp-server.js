@@ -12,6 +12,7 @@ import {
 import {
   fetchMssBizList,
   fetchGov24ServiceList,
+  fetchGov24ServiceDetail,
   fetchBizinfoPrograms,
   fetchNaraBidList,
   fetchSmesNoticeList,
@@ -77,7 +78,7 @@ const tools = [
   {
     name: 'fetch_nara_bids',
     description:
-      '나라장터 입찰공고를 조회한다. type으로 용역/공사/물품/외자 선택 가능. 환경변수 DATA_GO_KR_SERVICE_KEY 필요.',
+      '나라장터 입찰공고를 조회한다. type으로 용역/공사/물품/외자 선택 가능. keyword로 공고명 검색 가능. 환경변수 DATA_GO_KR_SERVICE_KEY 필요.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -89,6 +90,7 @@ const tools = [
           description: '공고 유형 — Servc(용역, 기본) / Cnstwk(공사) / Thng(물품) / Frgcpt(외자)',
           default: 'Servc',
         },
+        keyword: { type: 'string', description: '공고명 키워드 검색 (선택)' },
         inqryBgnDt: {
           type: 'string',
           description: '조회 시작일시 YYYYMMDDHHMM (선택)',
@@ -114,11 +116,24 @@ const tools = [
     },
     handler: (args) => fetchSmesNoticeList(args || {}),
   },
+  {
+    name: 'fetch_gov24_service_detail',
+    description:
+      '정부24 공공서비스 상세 정보를 조회한다. fetch_gov24_services로 얻은 serviceId를 넘기면 신청자격·구비서류·지원금액 등 상세 내용을 반환한다. 환경변수 DATA_GO_KR_SERVICE_KEY 필요.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        serviceId: { type: 'string', description: '서비스ID (fetch_gov24_services 결과의 serviceId 값)' },
+      },
+      required: ['serviceId'],
+    },
+    handler: (args) => fetchGov24ServiceDetail(args || {}),
+  },
 ];
 
 // --- MCP 서버 인스턴스 생성 ---
 const server = new Server(
-  { name: 'gov-data-mcp', version: '0.1.0' },
+  { name: 'gov-data-mcp', version: '0.1.2' },
   { capabilities: { tools: {} } },
 );
 

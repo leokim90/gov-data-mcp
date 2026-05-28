@@ -4,6 +4,7 @@
 import {
   fetchMssBizList,
   fetchGov24ServiceList,
+  fetchGov24ServiceDetail,
   fetchBizinfoPrograms,
   fetchNaraBidList,
   fetchSmesNoticeList,
@@ -12,6 +13,11 @@ import {
 const tests = [
   ['fetchMssBizList', () => fetchMssBizList()],
   ['fetchGov24ServiceList', () => fetchGov24ServiceList({ keyword: 'test' })],
+  // 상세 조회는 item 또는 warning 키를 반환하므로 별도 검증
+  ['fetchGov24ServiceDetail (키 없음)', async () => {
+    const r = await fetchGov24ServiceDetail({ serviceId: 'TEST' });
+    return { items: [], ...r };
+  }],
   ['fetchBizinfoPrograms', () => fetchBizinfoPrograms()],
   ['fetchNaraBidList', () => fetchNaraBidList()],
   ['fetchSmesNoticeList', () => fetchSmesNoticeList()],
