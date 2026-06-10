@@ -1,6 +1,6 @@
 {
   "name": "@leokim90/gov-data-mcp",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Korean government open-data MCP server (중기부·정부24·기업마당·나라장터·중소벤처24)",
   "type": "module",
   "main": "src/index.js",
