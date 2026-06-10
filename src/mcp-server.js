@@ -2,12 +2,21 @@
 // --- 한국 정부 공공데이터 MCP 서버 (stdio 모드) ---
 // 5개 출처(중기부·정부24·기업마당·나라장터·중소벤처24)를 도구로 노출
 
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
+
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
+
+// 버전은 package.json에서 읽어 단일 출처 유지 (하드코딩 시 npm version과 어긋남)
+const pkg = JSON.parse(
+  readFileSync(join(dirname(fileURLToPath(import.meta.url)), '../package.json'), 'utf-8'),
+);
 
 import {
   fetchMssBizList,
@@ -133,7 +142,7 @@ const tools = [
 
 // --- MCP 서버 인스턴스 생성 ---
 const server = new Server(
-  { name: 'gov-data-mcp', version: '0.1.2' },
+  { name: 'gov-data-mcp', version: pkg.version },
   { capabilities: { tools: {} } },
 );
 
