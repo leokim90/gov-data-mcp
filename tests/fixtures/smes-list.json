@@ -1,0 +1,41 @@
+{
+  "totalCount": 4,
+  "data": [
+    {
+      "pblancNm": "마감 지난 공고 (제외 대상)",
+      "sportInsttNm": "중소벤처기업진흥공단",
+      "pblancBgnDt": "20000101",
+      "pblancEndDt": "2000-01-31",
+      "policyCnts": "<p>이미 마감된 공고입니다.</p>",
+      "sportTrget": "중소기업",
+      "pblancDtlUrl": "https://www.smes.go.kr/view?id=PAST"
+    },
+    {
+      "pblancNm": "미래 마감 공고 (포함 대상)",
+      "sportInsttNm": "창업진흥원",
+      "pblancBgnDt": "29990101",
+      "pblancEndDt": "2999-12-31",
+      "policyCnts": "<p>충분히 미래의 공고입니다.&nbsp;A&amp;B</p>",
+      "sportTrget": "예비창업자",
+      "sportMg": "최대 1억원",
+      "pblancDtlUrl": "https://www.smes.go.kr/view?id=FUTURE"
+    },
+    {
+      "pblancNm": "마감일 파싱 불가 공고 (통과 대상)",
+      "sportInsttNm": "한국인터넷진흥원",
+      "pblancBgnDt": "상시",
+      "pblancEndDt": "예산 소진 시까지",
+      "policyCnts": "상시 모집 공고",
+      "sportTrget": "전체",
+      "pblancDtlUrl": "https://www.smes.go.kr/view?id=ROLLING"
+    },
+    {
+      "pblancNm": "마감일 없는 공고 (통과 대상)",
+      "sportInsttNm": "정보통신산업진흥원",
+      "pblancBgnDt": "",
+      "pblancEndDt": "",
+      "policyCnts": "마감일 미기재",
+      "pblancDtlUrl": "https://www.smes.go.kr/view?id=NODATE"
+    }
+  ]
+}

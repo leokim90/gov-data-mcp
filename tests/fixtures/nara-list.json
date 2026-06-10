@@ -1,0 +1,34 @@
+{
+  "response": {
+    "header": { "resultCode": "00", "resultMsg": "정상" },
+    "body": {
+      "numOfRows": 2,
+      "pageNo": 1,
+      "totalCount": 87,
+      "items": [
+        {
+          "bidNtceNo": "R26BK01553009",
+          "bidNtceNm": "경북 청년인재스쿨 인재양성 프로그램 운영 용역(재공고)",
+          "ntceInsttNm": "사단법인 경북프라이드기업 씨이오협회",
+          "dminsttNm": "사단법인 경북프라이드기업 씨이오협회",
+          "bidNtceDt": "2026-06-01 00:59:50",
+          "bidClseDt": "2026-06-15 10:00:00",
+          "presmptPrce": "50000000",
+          "bidNtceDtlUrl": "https://www.g2b.go.kr/view?no=R26BK01553009",
+          "ntceKindNm": "등록공고",
+          "cntrctCnclsMthdNm": "제한경쟁",
+          "bidQlfctRgstDt": "2026-06-10 17:00:00",
+          "rbidPermsnYn": "Y"
+        },
+        {
+          "bidNtceNo": "R26BK01553010",
+          "bidNtceNm": "데이터 플랫폼 구축 용역",
+          "ntceInsttNm": "한국지능정보사회진흥원",
+          "dminsttNm": "한국지능정보사회진흥원",
+          "bidNtceDt": "20260602",
+          "bidClseDt": "20260620"
+        }
+      ]
+    }
+  }
+}

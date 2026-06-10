@@ -52,8 +52,12 @@ export async function fetchSmesNoticeList({ numOfRows = 20, pageNo = 1 } = {}) {
 
     const items = rawItems
       .filter((item) => {
-        const endDate = item.pblancEndDt ? new Date(item.pblancEndDt) : null;
-        return !endDate || endDate >= today;
+        // 마감일이 없으면 통과 (상시 모집 등)
+        if (!item.pblancEndDt) return true;
+        const endDate = new Date(item.pblancEndDt);
+        // 날짜 파싱 실패("상시", "예산 소진 시까지" 등)는 통과 — API 형식 신뢰
+        if (Number.isNaN(endDate.getTime())) return true;
+        return endDate >= today;
       })
       .map((item) => ({
         title: item.pblancNm || '',

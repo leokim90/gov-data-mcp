@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>기업마당 지원사업</title>
+<item>
+<pblancNm><![CDATA[2026년 청년창업 사관학교 입교생 모집]]></pblancNm>
+<author>중소벤처기업진흥공단</author>
+<excInsttNm>창업진흥원</excInsttNm>
+<description><![CDATA[<p>청년창업 사관학교 입교생을 모집합니다.&nbsp;최대 1억원 지원. A&amp;B 협력 &lt;필독&gt;</p>]]></description>
+<lcategory>창업</lcategory>
+<pubDate>Mon, 09 Jun 2026 09:00:00 +0900</pubDate>
+<reqstDt>2026-06-01 ~ 2026-06-30</reqstDt>
+<trgetNm>예비창업자, 청년</trgetNm>
+<pblancUrl><![CDATA[https://www.bizinfo.go.kr/view?id=PBLN_001]]></pblancUrl>
+<flpthNm>https://www.bizinfo.go.kr/file/PBLN_001</flpthNm>
+<fileNm>모집공고.hwp</fileNm>
+<hashtags>창업,청년，지원금</hashtags>
+</item>
+<item>
+<title>해시태그 없는 공고 (title 폴백 테스트)</title>
+<author>한국인터넷진흥원</author>
+<excInsttNm>KISA</excInsttNm>
+<description>HTML 없는 일반 설명입니다.</description>
+<lcategory>정보보호</lcategory>
+<pubDate>Tue, 10 Jun 2026 09:00:00 +0900</pubDate>
+<reqstDt>2026-06-05 ~ 2026-07-05</reqstDt>
+<trgetNm>중소기업</trgetNm>
+<link>https://www.bizinfo.go.kr/view?id=PBLN_002</link>
+<hashtags></hashtags>
+</item>
+</channel>
+</rss>

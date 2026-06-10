@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "start": "node src/mcp-server.js",
-    "test": "node tests/smoke.js"
+    "test": "node --test tests/parsing.test.js && node tests/smoke.js && node tests/mcp-handshake.js"
   },
   "keywords": [
     "mcp",
