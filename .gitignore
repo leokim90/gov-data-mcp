@@ -7,3 +7,6 @@ npm-debug.log*
 .npm
 dist/
 coverage/
+
+# 키가 채워진 사적 배포용 파일 — 절대 커밋 금지
+share-config.local.*
