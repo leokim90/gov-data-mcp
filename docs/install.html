@@ -110,6 +110,17 @@
   .check li:before { content: "✓"; position: absolute; left: 4px; color: var(--accent); font-weight: 700; }
   .check li:last-child { border-bottom: none; }
 
+  /* 스크린샷 (이미지 없으면 점선 자리로 표시) */
+  .shot { margin: 16px 0; }
+  .shot img { display: block; max-width: 100%; border: 1px solid var(--line); border-radius: 12px; }
+  .shot figcaption { font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+  .shot.missing img { display: none; }
+  .shot.missing figcaption {
+    border: 2px dashed var(--line); border-radius: 12px; padding: 26px 16px;
+    text-align: center; color: var(--muted); margin-top: 0; font-size: 0.85rem;
+  }
+  .shot.missing figcaption:before { content: "📷  스크린샷 자리 — "; font-weight: 600; }
+
   footer { border-top: 1px solid var(--line); padding-top: 28px; color: var(--muted); font-size: 0.9rem; text-align: center; }
   footer a { color: var(--accent); text-decoration: none; }
 </style>
@@ -165,6 +176,10 @@
       </div>
     </div>
     <p class="hint" style="margin-top:14px;">⚠️ data.go.kr 키는 첫 발급 후 실제 호출까지 최대 1~2시간 걸릴 수 있어요.</p>
+
+    <figure class="shot"><img src="images/key-data-go-kr.png" alt="data.go.kr 인증키 발급현황 화면" onerror="this.closest('.shot').classList.add('missing')"><figcaption>data.go.kr 마이페이지 &gt; 인증키 발급현황</figcaption></figure>
+    <figure class="shot"><img src="images/key-bizinfo.png" alt="기업마당 오픈API 인증키 화면" onerror="this.closest('.shot').classList.add('missing')"><figcaption>기업마당 마이페이지 &gt; 오픈API 신청/관리</figcaption></figure>
+    <figure class="shot"><img src="images/key-smes.png" alt="중소벤처24 API 토큰 화면" onerror="this.closest('.shot').classList.add('missing')"><figcaption>중소벤처24 마이페이지 &gt; Open API 관리</figcaption></figure>
   </section>
 
   <!-- STEP 2 -->
@@ -180,6 +195,7 @@
 
     <div class="tab-panel active" id="tab-desktop">
       <p class="hint">설정 파일을 엽니다 — <span class="path">~/Library/Application Support/Claude/claude_desktop_config.json</span> (Windows: <span class="path">%APPDATA%\Claude\</span>). 메뉴 → Settings → Developer → <b>Edit Config</b> 버튼으로도 열립니다.</p>
+      <figure class="shot"><img src="images/desktop-edit-config.png" alt="Claude Desktop Edit Config 위치" onerror="this.closest('.shot').classList.add('missing')"><figcaption>Settings &gt; Developer &gt; Edit Config 버튼</figcaption></figure>
       <div class="code">
         <button class="copy-btn">복사</button>
 <pre>{
@@ -206,6 +222,7 @@
   -- npx -y @leokim90/gov-data-mcp</pre>
       </div>
       <p class="hint">확인: <code>claude mcp list</code> → <code>gov-data ✔ Connected</code> 보이면 성공.</p>
+      <figure class="shot"><img src="images/code-mcp-list.png" alt="claude mcp list 출력" onerror="this.closest('.shot').classList.add('missing')"><figcaption>터미널 claude mcp list 출력</figcaption></figure>
     </div>
 
     <div class="tab-panel" id="tab-cursor">
@@ -236,6 +253,7 @@
       <li><b>Claude Code</b> — 새 세션에서 <code>/mcp</code> 입력 → <code>gov-data ✓ connected</code></li>
       <li><b>Cursor 등</b> — MCP 설정 화면에서 <code>gov-data</code>가 초록불(connected)</li>
     </ul>
+    <figure class="shot"><img src="images/desktop-tools.png" alt="Claude Desktop 도구 목록" onerror="this.closest('.shot').classList.add('missing')"><figcaption>Claude Desktop 🔨 아이콘 &gt; gov-data 도구 6개</figcaption></figure>
     <p class="hint" style="margin-top:18px;">이제 Claude에 이렇게 물어보세요:</p>
     <ul class="check">
       <li>"오늘 중기부 사업공고 최신 10건 가져와줘"</li>
