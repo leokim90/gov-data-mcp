@@ -22,6 +22,9 @@ Claude Desktop · Claude Code · Cursor 등 MCP 호환 클라이언트에서 정
    - 키가 없으면 **인증키 신청** 버튼 → 자동 발급 (즉시)
 5. 복사한 값을 `DATA_GO_KR_SERVICE_KEY`에 사용
 
+![data.go.kr 인증키 발급현황 화면](images/key-data-go-kr.png)
+<!-- 스크린샷: data.go.kr 마이페이지 > 인증키 발급현황 (일반 인증키 값 위치). 실제 키 값은 가릴 것 -->
+
 > **주의:** 키는 URL 인코딩된 형태(`%2F`, `%2B` 등 포함)로 복사된다. 그대로 사용하면 된다.
 > 첫 발급 후 실제 API 호출이 될 때까지 최대 1~2시간 걸릴 수 있다.
 > 각 API(중기부 사업공고 / 정부24 / 나라장터 입찰)는 **활용신청**을 따로 해야 한다.
@@ -35,6 +38,9 @@ Claude Desktop · Claude Code · Cursor 등 MCP 호환 클라이언트에서 정
 3. **오픈API 신청** 버튼 → 활용 목적 입력 후 신청 (보통 즉시~수 분 내 자동 승인)
 4. 승인 후 같은 페이지에서 **인증키** 복사
 
+![기업마당 오픈API 인증키 화면](images/key-bizinfo.png)
+<!-- 스크린샷: 기업마당 마이페이지 > 오픈API 신청/관리 > 인증키. 실제 키 값은 가릴 것 -->
+
 ### 🔑 키 3 — `SMES_API_KEY` (중소벤처24)
 
 **발급처:** https://www.smes.go.kr
@@ -43,6 +49,9 @@ Claude Desktop · Claude Code · Cursor 등 MCP 호환 클라이언트에서 정
 2. 로그인 후 **마이페이지** → 좌측 **Open API 관리**
 3. **API 토큰 신청** 버튼 → 즉시 발급
 4. 발급된 **토큰 값** 복사
+
+![중소벤처24 API 토큰 화면](images/key-smes.png)
+<!-- 스크린샷: 중소벤처24 마이페이지 > Open API 관리 > API 토큰. 실제 토큰 값은 가릴 것 -->
 
 ---
 
@@ -58,6 +67,9 @@ Claude Desktop · Claude Code · Cursor 등 MCP 호환 클라이언트에서 정
 | Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
 
 > 파일이 없으면 새로 만든다. Claude Desktop 메뉴 → Settings → Developer → **Edit Config** 버튼으로도 열린다.
+
+![Claude Desktop Edit Config 위치](images/desktop-edit-config.png)
+<!-- 스크린샷: Claude Desktop > Settings > Developer > Edit Config 버튼 -->
 
 아래를 붙여넣고 키만 본인 발급키로 교체:
 
@@ -99,6 +111,9 @@ claude mcp add gov-data --scope user \
 
 확인: `claude mcp list` → `gov-data ✔ Connected` 보이면 정상.
 
+![claude mcp list 출력](images/code-mcp-list.png)
+<!-- 스크린샷: 터미널에서 claude mcp list 실행 → gov-data ✔ Connected 줄 -->
+
 ### Cursor · Windsurf · Cline 등
 
 대부분 Claude Desktop과 **동일한 `mcpServers` JSON 포맷**을 쓴다. 위 JSON 블록을 각 클라이언트 MCP 설정에 그대로 넣으면 된다.
@@ -136,6 +151,9 @@ docker run -i -e DATA_GO_KR_SERVICE_KEY=발급키 your-image
 - **Claude Desktop**: 채팅창 좌하단 🔨(망치) 아이콘 → `gov-data`에 도구 6개 표시되면 정상.
 - **Claude Code**: 새 세션에서 `/mcp` 입력 → `gov-data ✓ connected`.
 - **Cursor 등**: MCP 설정 화면에서 `gov-data`가 connected(초록불)로 표시.
+
+![Claude Desktop 도구 목록 확인](images/desktop-tools.png)
+<!-- 스크린샷: Claude Desktop 채팅창 좌하단 🔨 아이콘 클릭 → gov-data 도구 6개 목록 -->
 
 > 키가 없는 도구는 자동으로 빈 배열을 반환하므로, 필요한 키만 설정해도 나머지 도구는 정상 동작한다.
 
