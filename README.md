@@ -100,15 +100,21 @@ Claude Desktop / Claude Code 등 MCP 호환 클라이언트에서 자연어로 �
 
 ### 2-B. Claude Code에 등록
 
-터미널에서 한 줄:
+터미널에서 한 줄. `--scope user`를 주면 **그 머신의 모든 프로젝트**에서 쓸 수 있다.
 
 ```bash
-claude mcp add gov-data \
+claude mcp add gov-data --scope user \
   --env DATA_GO_KR_SERVICE_KEY=발급받은키 \
   --env BIZINFO_API_KEY=발급받은키 \
   --env SMES_API_KEY=발급받은키 \
   -- npx -y @leokim90/gov-data-mcp
 ```
+
+| scope | 적용 범위 |
+|-------|-----------|
+| `--scope user` | 그 머신의 모든 프로젝트 (권장) |
+| `--scope local` (기본) | 현재 프로젝트 디렉토리에서만 |
+| `--scope project` | 프로젝트 루트 `.mcp.json`에 저장 → 팀 공유 (키 평문 주의) |
 
 확인:
 
@@ -116,14 +122,59 @@ claude mcp add gov-data \
 claude mcp list
 ```
 
-→ 출력에 `gov-data` 있으면 정상.
+→ 출력에 `gov-data ✔ Connected` 있으면 정상.
 
-특정 프로젝트에서만 쓰고 싶으면 프로젝트 루트에 `.mcp.json` 파일로도 가능 (구조는 위 Claude Desktop JSON과 동일). 단, 키가 평문으로 들어가므로 **`.gitignore`에 `.mcp.json` 추가 필수.**
+특정 프로젝트에서만 쓰려면 프로젝트 루트에 `.mcp.json` 파일로도 가능 (구조는 위 Claude Desktop JSON과 동일). 단, 키가 평문으로 들어가므로 **`.gitignore`에 `.mcp.json` 추가 필수.**
 
-### 2-C. 동작 확인
+### 2-C. Cursor · Windsurf · Cline · 기타 MCP 클라이언트
+
+대부분의 MCP 클라이언트는 Claude Desktop과 **동일한 `mcpServers` JSON 포맷**을 쓴다. 각 클라이언트의 MCP 설정 파일에 2-A의 JSON 블록을 그대로 넣으면 된다.
+
+| 클라이언트 | 설정 위치 |
+|-----------|-----------|
+| Cursor | Settings → MCP → Add, 또는 `~/.cursor/mcp.json` (프로젝트는 `.cursor/mcp.json`) |
+| Windsurf | `~/.codeium/windsurf/mcp_config.json` |
+| Cline (VS Code) | Cline 패널 → MCP Servers → Configure, 또는 `cline_mcp_settings.json` |
+| 기타 | "MCP 서버 추가" 메뉴에서 `command: npx`, `args: ["-y", "@leokim90/gov-data-mcp"]`, `env`에 키 |
+
+> 클라이언트마다 키는 같은 `env` 객체에 넣는다. 포맷이 약간 달라도 `command`/`args`/`env` 3요소는 공통이다.
+
+### 2-D. 서버 · 헤드리스 · Docker 환경
+
+GUI 없이 직접 띄우거나 다른 호스트에서 구동할 때. stdio 서버이므로 MCP 클라이언트가 자식 프로세스로 실행하는 게 기본이지만, 환경변수만 있으면 어디서든 동작한다.
+
+```bash
+# 환경변수로 직접 실행 (stdio — MCP 클라이언트가 stdin/stdout으로 연결)
+DATA_GO_KR_SERVICE_KEY=발급키 \
+BIZINFO_API_KEY=선택 \
+SMES_API_KEY=선택 \
+npx -y @leokim90/gov-data-mcp
+```
+
+Docker 등 컨테이너에서 쓰려면 Node 20+ 이미지에 키를 `-e`로 주입:
+
+```dockerfile
+FROM node:20-slim
+# 전역 설치로 bin을 이미지에 미리 받아둔다 (첫 실행 지연 제거)
+RUN npm install -g @leokim90/gov-data-mcp
+CMD ["gov-data-mcp"]
+```
+```bash
+docker run -i \
+  -e DATA_GO_KR_SERVICE_KEY=발급키 \
+  -e BIZINFO_API_KEY=선택 \
+  -e SMES_API_KEY=선택 \
+  your-image
+```
+
+> `-i`(stdin 유지) 필수 — stdio 트랜스포트라 표준입출력이 끊기면 통신 불가.
+> 로그는 stderr로만 나가고 stdout은 MCP 프로토콜 전용이다.
+
+### 2-E. 동작 확인
 
 - **Claude Desktop**: 채팅창 좌하단 🔨(망치) 아이콘 클릭 → `gov-data` 항목에 도구 6개(`fetch_mss_biz`, `fetch_gov24_services`, `fetch_gov24_service_detail`, `fetch_bizinfo_programs`, `fetch_nara_bids`, `fetch_smes_notices`) 표시되면 정상.
 - **Claude Code**: 새 세션 열고 `/mcp` 입력 → `gov-data ✓ connected` 떠야 정상.
+- **Cursor 등**: MCP 설정 화면에서 `gov-data`가 초록불/connected로 표시되면 정상.
 
 > 키가 없는 도구는 자동으로 빈 배열을 반환하므로, 필요한 키만 설정해도 나머지 도구는 정상 동작한다.
 
@@ -191,7 +242,7 @@ cd gov-data-mcp
 npm install
 cp .env.example .env   # 키 채우기
 npm start              # MCP 서버 stdio 모드로 부팅
-npm test               # 스모크 테스트
+npm test               # 유닛(파싱)+스모크+핸드셰이크 테스트
 ```
 
 ## 한도(Rate Limit)
