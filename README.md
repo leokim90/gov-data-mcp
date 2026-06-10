@@ -44,6 +44,8 @@ API 키 1개([data.go.kr](https://www.data.go.kr) 무료 발급)만 있으면 �
 | **[Next.js 15 사용](docs/usage-nextjs.md)** | 개발자 | App Router Route Handler / 서버 컴포넌트 예시, 키 보안·캐싱 |
 | **[초기 공유 배포](docs/install-trial-share.md)** | 운영자 | 체험용 공유 키로 먼저 배포 → 나중에 개인 키로 전환 |
 
+> 🌐 **비개발자용 웹 가이드(클릭 한 번으로 따라하기)**: [설치 가이드 HTML 보기](https://htmlpreview.github.io/?https://github.com/leokim90/gov-data-mcp/blob/main/docs/install.html) — 키 발급 + 클라이언트 등록을 탭·복사 버튼으로 쉽게. (소스: [`docs/install.html`](docs/install.html))
+
 ## 사용 예시 (자연어)
 
 Claude에 자연어로 요청:

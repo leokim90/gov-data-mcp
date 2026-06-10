@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>gov-data-mcp 설치 가이드</title>
+<style>
+  :root {
+    --accent: #2563eb;
+    --accent-soft: #eff4ff;
+    --ink: #111827;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --bg: #ffffff;
+    --code-bg: #0f172a;
+    --code-ink: #e2e8f0;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 20px 80px; }
+
+  header.hero {
+    padding: 56px 20px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 48px;
+  }
+  .hero h1 { font-size: 2rem; margin: 0 0 12px; letter-spacing: -0.02em; }
+  .hero p { color: var(--muted); margin: 0 auto; max-width: 560px; font-size: 1.05rem; }
+  .hero .badge {
+    display: inline-block; margin-bottom: 20px; padding: 6px 14px;
+    background: var(--accent-soft); color: var(--accent);
+    border-radius: 999px; font-size: 0.85rem; font-weight: 600;
+  }
+
+  .note {
+    background: var(--accent-soft); border: 1px solid #dbe6ff;
+    border-radius: var(--radius); padding: 16px 18px; margin: 0 0 40px;
+    font-size: 0.95rem;
+  }
+  .note strong { color: var(--accent); }
+
+  .step { margin-bottom: 56px; }
+  .step-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+  .step-num {
+    flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%;
+    background: var(--accent); color: #fff; display: grid; place-items: center;
+    font-weight: 700; font-size: 1.05rem;
+  }
+  .step-head h2 { font-size: 1.35rem; margin: 0; letter-spacing: -0.01em; }
+
+  .cards { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 640px) { .cards { grid-template-columns: 1fr 1fr 1fr; } }
+  .card {
+    border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 18px; background: #fff;
+  }
+  .card.required { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .card h3 { margin: 0 0 4px; font-size: 1rem; }
+  .card .key { font-family: ui-monospace, Menlo, monospace; font-size: 0.78rem; color: var(--accent); word-break: break-all; }
+  .card .tag {
+    display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 2px 8px;
+    border-radius: 6px; margin-bottom: 8px;
+  }
+  .tag.req { background: var(--accent); color: #fff; }
+  .tag.opt { background: #f3f4f6; color: var(--muted); }
+  .card ol { margin: 10px 0 0; padding-left: 18px; font-size: 0.86rem; color: #374151; }
+  .card a { color: var(--accent); }
+
+  /* tabs */
+  .tabs { display: flex; gap: 8px; border-bottom: 1px solid var(--line); margin-bottom: 20px; flex-wrap: wrap; }
+  .tab-btn {
+    border: none; background: none; padding: 10px 16px; font: inherit; cursor: pointer;
+    color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; font-weight: 600;
+  }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* code block */
+  .code {
+    position: relative; background: var(--code-bg); color: var(--code-ink);
+    border-radius: 12px; padding: 16px 16px; margin: 14px 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.84rem;
+    overflow-x: auto;
+  }
+  .code pre { margin: 0; white-space: pre; }
+  .copy-btn {
+    position: absolute; top: 10px; right: 10px; border: none; cursor: pointer;
+    background: rgba(255,255,255,0.12); color: #fff; border-radius: 8px;
+    padding: 5px 10px; font-size: 0.75rem; font-weight: 600;
+  }
+  .copy-btn:hover { background: rgba(255,255,255,0.22); }
+  .copy-btn.done { background: #16a34a; }
+
+  .hint { font-size: 0.88rem; color: var(--muted); }
+  .hint code { background: #f3f4f6; padding: 1px 6px; border-radius: 5px; font-size: 0.85em; }
+  .path { font-family: ui-monospace, Menlo, monospace; font-size: 0.82rem; background: #f3f4f6; padding: 2px 7px; border-radius: 6px; }
+
+  .check { list-style: none; padding: 0; margin: 0; }
+  .check li { padding: 10px 0 10px 30px; position: relative; border-bottom: 1px solid var(--line); }
+  .check li:before { content: "✓"; position: absolute; left: 4px; color: var(--accent); font-weight: 700; }
+  .check li:last-child { border-bottom: none; }
+
+  footer { border-top: 1px solid var(--line); padding-top: 28px; color: var(--muted); font-size: 0.9rem; text-align: center; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<header class="hero">
+  <span class="badge">정부 공공데이터 · MCP</span>
+  <h1>gov-data-mcp 설치 가이드</h1>
+  <p>중기부 사업공고 · 정부24 혜택 · 나라장터 입찰을 Claude에서 자연어로 조회. 아래 3단계만 따라 하세요.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="note">
+    <strong>키 1개만 있어도 시작할 수 있어요.</strong> <code>DATA_GO_KR_SERVICE_KEY</code> 하나면 중기부·정부24·나라장터 3종이 동작합니다. 나머지 2개는 선택입니다.
+  </div>
+
+  <!-- STEP 1 -->
+  <section class="step">
+    <div class="step-head"><div class="step-num">1</div><h2>API 키 발급</h2></div>
+    <p class="hint">각 사이트에서 무료로 발급받습니다. 회원가입 포함 사이트당 약 5~10분.</p>
+    <div class="cards">
+      <div class="card required">
+        <span class="tag req">필수</span>
+        <h3>data.go.kr</h3>
+        <div class="key">DATA_GO_KR_SERVICE_KEY</div>
+        <ol>
+          <li><a href="https://www.data.go.kr" target="_blank" rel="noopener">data.go.kr</a> 회원가입</li>
+          <li>마이페이지 → 인증키 발급현황</li>
+          <li>일반 인증키(Encoding) 값 복사</li>
+          <li>중기부/정부24/나라장터 API 각각 <b>활용신청</b></li>
+        </ol>
+      </div>
+      <div class="card">
+        <span class="tag opt">선택</span>
+        <h3>기업마당</h3>
+        <div class="key">BIZINFO_API_KEY</div>
+        <ol>
+          <li><a href="https://www.bizinfo.go.kr" target="_blank" rel="noopener">bizinfo.go.kr</a> 회원가입</li>
+          <li>마이페이지 → 오픈API 신청/관리</li>
+          <li>오픈API 신청 → 인증키 복사</li>
+        </ol>
+      </div>
+      <div class="card">
+        <span class="tag opt">선택</span>
+        <h3>중소벤처24</h3>
+        <div class="key">SMES_API_KEY</div>
+        <ol>
+          <li><a href="https://www.smes.go.kr" target="_blank" rel="noopener">smes.go.kr</a> 회원가입</li>
+          <li>마이페이지 → Open API 관리</li>
+          <li>API 토큰 신청 → 토큰 복사</li>
+        </ol>
+      </div>
+    </div>
+    <p class="hint" style="margin-top:14px;">⚠️ data.go.kr 키는 첫 발급 후 실제 호출까지 최대 1~2시간 걸릴 수 있어요.</p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step">
+    <div class="step-head"><div class="step-num">2</div><h2>클라이언트에 등록</h2></div>
+    <p class="hint">사용하는 프로그램 탭을 고르세요. 키 부분만 본인 발급키로 바꾸면 됩니다.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="desktop">Claude Desktop</button>
+      <button class="tab-btn" data-tab="code">Claude Code</button>
+      <button class="tab-btn" data-tab="cursor">Cursor / 기타</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-desktop">
+      <p class="hint">설정 파일을 엽니다 — <span class="path">~/Library/Application Support/Claude/claude_desktop_config.json</span> (Windows: <span class="path">%APPDATA%\Claude\</span>). 메뉴 → Settings → Developer → <b>Edit Config</b> 버튼으로도 열립니다.</p>
+      <div class="code">
+        <button class="copy-btn">복사</button>
+<pre>{
+  "mcpServers": {
+    "gov-data": {
+      "command": "npx",
+      "args": ["-y", "@leokim90/gov-data-mcp"],
+      "env": {
+        "DATA_GO_KR_SERVICE_KEY": "여기에_발급받은_키"
+      }
+    }
+  }
+}</pre>
+      </div>
+      <p class="hint">붙여넣고 저장 → <b>Claude Desktop 완전 종료(Cmd+Q) 후 재시작.</b></p>
+    </div>
+
+    <div class="tab-panel" id="tab-code">
+      <p class="hint">터미널에서 한 줄. <code>--scope user</code>면 그 컴퓨터 전체에서 사용됩니다.</p>
+      <div class="code">
+        <button class="copy-btn">복사</button>
+<pre>claude mcp add gov-data --scope user \
+  --env DATA_GO_KR_SERVICE_KEY=여기에_발급받은_키 \
+  -- npx -y @leokim90/gov-data-mcp</pre>
+      </div>
+      <p class="hint">확인: <code>claude mcp list</code> → <code>gov-data ✔ Connected</code> 보이면 성공.</p>
+    </div>
+
+    <div class="tab-panel" id="tab-cursor">
+      <p class="hint">Cursor·Windsurf·Cline 등은 Claude Desktop과 같은 JSON 포맷을 씁니다. 각 프로그램의 MCP 설정에 아래를 넣으세요.</p>
+      <div class="code">
+        <button class="copy-btn">복사</button>
+<pre>{
+  "mcpServers": {
+    "gov-data": {
+      "command": "npx",
+      "args": ["-y", "@leokim90/gov-data-mcp"],
+      "env": {
+        "DATA_GO_KR_SERVICE_KEY": "여기에_발급받은_키"
+      }
+    }
+  }
+}</pre>
+      </div>
+      <p class="hint">Cursor: Settings → MCP → Add · Windsurf: <span class="path">~/.codeium/windsurf/mcp_config.json</span></p>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step">
+    <div class="step-head"><div class="step-num">3</div><h2>동작 확인</h2></div>
+    <ul class="check">
+      <li><b>Claude Desktop</b> — 채팅창 좌하단 🔨(망치) 아이콘 클릭 → <code>gov-data</code>에 도구 6개가 보이면 정상</li>
+      <li><b>Claude Code</b> — 새 세션에서 <code>/mcp</code> 입력 → <code>gov-data ✓ connected</code></li>
+      <li><b>Cursor 등</b> — MCP 설정 화면에서 <code>gov-data</code>가 초록불(connected)</li>
+    </ul>
+    <p class="hint" style="margin-top:18px;">이제 Claude에 이렇게 물어보세요:</p>
+    <ul class="check">
+      <li>"오늘 중기부 사업공고 최신 10건 가져와줘"</li>
+      <li>"정부24에서 '청년 창업' 키워드로 혜택 검색해줘"</li>
+      <li>"나라장터 용역 입찰공고 최근 20건 보여줘"</li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>문제가 있거나 더 자세한 내용은 GitHub를 확인하세요.</p>
+    <p>
+      <a href="https://github.com/leokim90/gov-data-mcp" target="_blank" rel="noopener">GitHub</a> ·
+      <a href="https://www.npmjs.com/package/@leokim90/gov-data-mcp" target="_blank" rel="noopener">npm</a> ·
+      <a href="https://github.com/leokim90/gov-data-mcp/issues" target="_blank" rel="noopener">이슈 문의</a>
+    </p>
+  </footer>
+</div>
+
+<script>
+  // 탭 전환
+  document.querySelectorAll('.tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('.tab-panel').forEach(function (p) { p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+  // 코드 복사
+  document.querySelectorAll('.copy-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var code = btn.parentElement.querySelector('pre').innerText;
+      navigator.clipboard.writeText(code).then(function () {
+        btn.textContent = '복사됨!';
+        btn.classList.add('done');
+        setTimeout(function () { btn.textContent = '복사'; btn.classList.remove('done'); }, 1500);
+      });
+    });
+  });
+</script>
+</body>
+</html>
