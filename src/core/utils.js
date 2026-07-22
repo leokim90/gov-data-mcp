@@ -1,4 +1,5 @@
 // --- 공통 유틸리티 ---
+import { sourceFromUrl, assertQuota, recordCall } from './usage.js';
 
 // XML 태그 값 추출 (CDATA + 일반 텍스트 모두 처리)
 export function extractTag(xml, tag) {
@@ -40,6 +41,15 @@ export function formatDate(dateStr) {
 
 // AbortController 기반 타임아웃 fetch (기본 10초)
 export async function fetchWithTimeout(url, options = {}, timeoutMs = 10000) {
+  // --- 일일 쿼터 검사 + 사용량 집계 ---
+  // 모든 외부 API 호출이 이 함수를 거치므로 여기서 한 번에 처리한다.
+  // 한도 도달 시 호출 전에 명확한 메시지로 차단 (조용한 실패 금지)
+  const source = sourceFromUrl(url);
+  if (source) {
+    assertQuota(source);
+    recordCall(source);
+  }
+
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {

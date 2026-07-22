@@ -15,7 +15,8 @@
   ],
   "scripts": {
     "start": "node src/mcp-server.js",
-    "test": "node --test tests/parsing.test.js && node tests/smoke.js && node tests/mcp-handshake.js"
+    "start:http": "node src/http-server.js",
+    "test": "node --test tests/parsing.test.js tests/cache-usage.test.js && node tests/smoke.js && node tests/mcp-handshake.js && node tests/http-handshake.js"
   },
   "keywords": [
     "mcp",
@@ -43,6 +44,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0"
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "express": "^5.1.0"
   }
 }
