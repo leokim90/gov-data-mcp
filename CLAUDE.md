@@ -62,6 +62,10 @@ npm publish (버전 bump → `npm publish --access public`) · 헬스체크: `np
 
 ## 고도화 백로그
 
-1. **원격 배포 전환**: `~/workspace/mcp-remote-deploy-spec.md` 스펙 참조.
-   - ✅ 코드 구현 완료 (2026-07-22): tools.js 추출 + http-server.js(Streamable HTTP, 토큰 인증 2방식) + 캐시/사용량 카운터 + Dockerfile + 테스트 2종. sangkwon-mcp 패턴 동일 적용
-   - ⬜ 배포: Cloudtype(국내 리전 1순위) 배포 → `/healthz` + 실호출 1건(403이면 IP 차단 의심) → Claude Desktop 커스텀 커넥터 등록 검증
+1. **원격 배포 전환**: `~/workspace/mcp-remote-deploy-spec.md` 스펙 참조. **완료 (2026-07-22)**
+   - ✅ 코드 구현: tools.js 추출 + http-server.js(Streamable HTTP, 토큰 인증 2방식) + 캐시/사용량 카운터 + Dockerfile + 테스트 2종. sangkwon-mcp 패턴 동일 적용
+   - ✅ Cloudtype 배포: `https://port-0-gov-data-mcp-mrvnrogm068d6cba.sel3.cloudtype.app` (서울 리전 gke-seoul-3, node@22 프리셋, 프리티어 0.5GB). **프리티어는 프로젝트 1개 제한이라 sangkwon-mcp 프로젝트 안에 서비스로 공존** (서비스 4개까지 가능)
+   - ✅ 검증: healthz / 잘못된 토큰 401 / initialize / data.go.kr 실호출 성공(국내 IP라 차단 없음) / 2회차 캐시히트(usage 1 고정 + cacheEntries 1)
+   - 재배포: `ctype apply -f <yaml>` (스테이지 `@thepoi112/sangkwon-mcp:main`). AUTH_TOKEN·키는 Cloudtype 콘솔 서비스 설정에서 조회
+   - ⬜ 남은 것: Claude Desktop 커스텀 커넥터 실등록 + 팀원 온보딩 안내문 (Cowork 작업)
+   - 주의: 프리티어 리소스는 매일 1회 중지·재시작 → 인메모리 캐시/사용량 카운터 리셋 (허용된 트레이드오프)
