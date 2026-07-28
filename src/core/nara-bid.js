@@ -1,6 +1,13 @@
 // --- 나라장터 입찰공고정보서비스 ---
-// endpoint: apis.data.go.kr/1230000/ad/BidPublicInfoService/getBidPblancListInfo{type}
+// endpoint: apis.data.go.kr/1230000/ad/BidPublicInfoService/getBidPblancListInfo{type}PPSSrch
 // type: Servc(용역) | Cnstwk(공사) | Thng(물품) | Frgcpt(외자)
+//
+// 오퍼레이션이 PPSSrch 계열인 이유 (2026-07-28 실 API 검증):
+// 기본 오퍼레이션(getBidPblancListInfo{type})은 bidNtceNm을 조용히 무시한다.
+// '제주'/'청소'/키워드없음 모두 totalCount 13627로 동일 → 검색이 전혀 안 됨.
+// 검색이 실제로 먹는 것은 조달청 검색 오퍼레이션(...PPSSrch)뿐이고,
+// 키워드 없이 호출하면 총건수·응답 필드(113개)가 기본 오퍼레이션과 동일해
+// 커버리지 손실 없이 통째로 대체할 수 있다.
 import { formatDate, fetchWithTimeout } from './utils.js';
 
 // Date 객체를 나라장터 조회 파라미터 형식(YYYYMMDDHHMM)으로 변환
@@ -26,7 +33,7 @@ export async function fetchNaraBidList({
     return { items: [], totalCount: 0, warning: 'DATA_GO_KR_SERVICE_KEY 미설정' };
   }
 
-  const endpoint = `https://apis.data.go.kr/1230000/ad/BidPublicInfoService/getBidPblancListInfo${type}`;
+  const endpoint = `https://apis.data.go.kr/1230000/ad/BidPublicInfoService/getBidPblancListInfo${type}PPSSrch`;
   const url = new URL(endpoint);
   url.searchParams.set('serviceKey', key);
   url.searchParams.set('numOfRows', String(numOfRows));

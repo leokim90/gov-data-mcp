@@ -50,12 +50,14 @@ dev/start: `npm start` (stdio) · `npm run start:http` (HTTP, AUTH_TOKEN 필수)
 - 키 미설정 시 throw로 변경 금지 — graceful 빈 배열 계약 유지
 - stdout에 console.log 금지 — MCP 프로토콜 깨짐 (stderr만)
 - 결과 텍스트 500자 제한 해제 금지 — 컨텍스트 비용 방어
+- nara 오퍼레이션을 `...PPSSrch`에서 기본형(`getBidPblancListInfo{type}`)으로 되돌리기 금지 — 기본형은 `bidNtceNm`을 조용히 무시해 키워드 검색이 전혀 안 된다 (2026-07-28 실 API 검증, 아래 리스크 항목 참조)
 
 ## 알려진 리스크 (2026-06-10 점검)
 
 - 정부 API 스키마 변경 시 파싱이 **조용히 빈 배열로 실패**한다 — totalCount가 갑자기 0이면 스키마 변경 의심
 - smes 마감일 필터: 날짜 파싱 실패(빈 값/`Invalid Date`) 항목은 필터 통과 (API 형식 신뢰) — 2026-06-10 `Invalid Date`도 통과하도록 수정
 - nara: API가 `inqryDiv`+조회기간을 필수로 요구 → 미지정 시 기본 최근 30일 자동 설정. 에러 헤더(resultCode≠00)는 warning으로 표면화(조용한 실패 방지)
+- nara 키워드 검색 (2026-07-28 수정, v0.1.7): 기본 오퍼레이션은 `bidNtceNm`을 **에러 없이 무시**한다 — '제주'/'청소'/키워드없음 모두 totalCount 13627로 동일했다. 조달청 검색 오퍼레이션 `getBidPblancListInfo{type}PPSSrch`만 검색이 먹는다. 키워드 없이 호출하면 총건수·응답 필드(113개)가 기본형과 동일해 커버리지 손실 없음. **다른 파라미터(`ntceInsttNm` 등)도 기본형에서는 무시되므로, 필터 추가 시 반드시 실 API로 "값을 바꿨을 때 totalCount가 변하는지" 먼저 확인할 것**
 - 유닛 테스트: `tests/parsing.test.js`(node:test, 픽스처 기반 42종). 파싱 로직 수정 시 `tests/fixtures/`에 실API 응답 픽스처 추가 후 테스트 먼저 작성
 
 ## 배포

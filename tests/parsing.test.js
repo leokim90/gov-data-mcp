@@ -306,6 +306,28 @@ describe('fetchNaraBidList (나라장터 JSON)', () => {
     assert.match(capturedUrl, /inqryEndDt=202601312359/);
   });
 
+  // 회귀 방지: 기본 오퍼레이션(getBidPblancListInfoServc)은 bidNtceNm을 조용히 무시한다.
+  // 실 API 확인(2026-07-28): 키워드 유무와 무관하게 totalCount 13627 동일 → 검색이 전혀 안 됨.
+  // 검색이 실제로 동작하는 것은 조달청 검색 오퍼레이션(...PPSSrch)뿐이다.
+  test('검색 지원 오퍼레이션(PPSSrch)을 호출한다', async () => {
+    mockFetch(fixture('nara-list.json'));
+    await fetchNaraBidList();
+    assert.match(capturedUrl, /getBidPblancListInfoServcPPSSrch/);
+  });
+
+  test('keyword를 주면 bidNtceNm 파라미터로 전달한다', async () => {
+    mockFetch(fixture('nara-list.json'));
+    await fetchNaraBidList({ keyword: '제주' });
+    assert.match(capturedUrl, /getBidPblancListInfoServcPPSSrch/);
+    assert.match(capturedUrl, /bidNtceNm=%EC%A0%9C%EC%A3%BC/);
+  });
+
+  test('type을 바꿔도 검색 오퍼레이션을 유지한다 (공사/물품)', async () => {
+    mockFetch(fixture('nara-list.json'));
+    await fetchNaraBidList({ type: 'Cnstwk', keyword: '제주' });
+    assert.match(capturedUrl, /getBidPblancListInfoCnstwkPPSSrch/);
+  });
+
   test('HTTP 에러는 error 필드로 반환한다', async () => {
     mockFetch('{}', { ok: false, status: 500 });
     const r = await fetchNaraBidList();
