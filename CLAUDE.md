@@ -38,7 +38,7 @@ fetch_mss_biz(중기부 공고) / fetch_gov24_services(검색) / fetch_gov24_ser
 
 ## 명령어
 
-dev/start: `npm start` (stdio) · `npm run start:http` (HTTP, AUTH_TOKEN 필수) · test: `npm test` (유닛 48 + smoke 6 + stdio/HTTP 핸드셰이크, 키 없어도 통과해야 정상)
+dev/start: `npm start` (stdio) · `npm run start:http` (HTTP, AUTH_TOKEN 필수) · test: `npm test` (유닛 51 + smoke 6 + stdio/HTTP 핸드셰이크, 키 없어도 통과해야 정상)
 클라이언트 등록(npm): `claude mcp add gov-data --env DATA_GO_KR_SERVICE_KEY=... -- npx -y @leokim90/gov-data-mcp`
 클라이언트 등록(로컬소스, 미배포 수정 즉시 반영): `claude mcp add gov-data --scope user --env DATA_GO_KR_SERVICE_KEY=... -- node <repo>/src/mcp-server.js`
 
@@ -58,7 +58,7 @@ dev/start: `npm start` (stdio) · `npm run start:http` (HTTP, AUTH_TOKEN 필수)
 - smes 마감일 필터: 날짜 파싱 실패(빈 값/`Invalid Date`) 항목은 필터 통과 (API 형식 신뢰) — 2026-06-10 `Invalid Date`도 통과하도록 수정
 - nara: API가 `inqryDiv`+조회기간을 필수로 요구 → 미지정 시 기본 최근 30일 자동 설정. 에러 헤더(resultCode≠00)는 warning으로 표면화(조용한 실패 방지)
 - nara 키워드 검색 (2026-07-28 수정, v0.1.7): 기본 오퍼레이션은 `bidNtceNm`을 **에러 없이 무시**한다 — '제주'/'청소'/키워드없음 모두 totalCount 13627로 동일했다. 조달청 검색 오퍼레이션 `getBidPblancListInfo{type}PPSSrch`만 검색이 먹는다. 키워드 없이 호출하면 총건수·응답 필드(113개)가 기본형과 동일해 커버리지 손실 없음. **다른 파라미터(`ntceInsttNm` 등)도 기본형에서는 무시되므로, 필터 추가 시 반드시 실 API로 "값을 바꿨을 때 totalCount가 변하는지" 먼저 확인할 것**
-- 유닛 테스트: `tests/parsing.test.js`(node:test, 픽스처 기반 42종). 파싱 로직 수정 시 `tests/fixtures/`에 실API 응답 픽스처 추가 후 테스트 먼저 작성
+- 유닛 테스트: `tests/parsing.test.js`(node:test, 픽스처 기반 45종). 파싱 로직 수정 시 `tests/fixtures/`에 실API 응답 픽스처 추가 후 테스트 먼저 작성
 
 ## 배포
 
@@ -71,6 +71,7 @@ npm publish (버전 bump → `npm publish --access public`) · 헬스체크: `np
    - ✅ Cloudtype 배포: `https://port-0-gov-data-mcp-mrvnrogm068d6cba.sel3.cloudtype.app` (서울 리전 gke-seoul-3, node@22 프리셋, 프리티어 0.5GB). **프리티어는 프로젝트 1개 제한이라 sangkwon-mcp 프로젝트 안에 서비스로 공존** (서비스 4개까지 가능)
    - ✅ 검증: healthz / 잘못된 토큰 401 / initialize / data.go.kr 실호출 성공(국내 IP라 차단 없음) / 2회차 캐시히트(usage 1 고정 + cacheEntries 1)
    - 재배포: `ctype apply -f <yaml>` (스테이지 `@thepoi112/sangkwon-mcp:main`). AUTH_TOKEN·키는 Cloudtype 콘솔 서비스 설정에서 조회
-   - ✅ 부서 배포 준비 (2026-07-28): AUTH_TOKENS 다중 토큰(라벨별 발급/회수/사용량) + 온보딩 안내문 `docs/team-onboarding.md`. 활성화하려면 Cloudtype 콘솔에 `AUTH_TOKENS=부서:토큰,...` 추가 후 재배포
-   - ⬜ 남은 것: Cloudtype에 AUTH_TOKENS 반영·재배포 + 부서별 커넥터 실등록
+   - ✅ 부서 배포 (2026-07-28): AUTH_TOKENS 다중 토큰(라벨별 발급/회수/사용량) + 온보딩 안내문 `docs/team-onboarding.md`. Cloudtype 반영·재배포 완료(`ctype apply`로 기존 env 보존한 채 AUTH_TOKENS만 추가), sales/planning 2개 라벨 발급
+   - ✅ 회사 조직 커넥터 등록 (2026-07-28): ONE finger 워크스페이스에 커스텀 커넥터로 연결 완료, 도구 6종 노출 확인. 팀원은 각자 "사용자 지정 → 커넥터 → 연결" 클릭만 하면 됨. OAuth 불필요(경로 토큰 방식)
+   - ⬜ 남은 것: npm 배포본이 0.1.5로 뒤처짐 → `npm publish`로 0.1.7 반영 필요 (npx 사용자는 nara 키워드 버그가 남아있음). 이 맥은 대화형 `npm login` 불가 → 토큰 방식 사용
    - 주의: 프리티어 리소스는 매일 1회 중지·재시작 → 인메모리 캐시/사용량 카운터 리셋 (허용된 트레이드오프)
